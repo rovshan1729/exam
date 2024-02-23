@@ -9,7 +9,7 @@ class BaseModel(models.Model):
 
 
 class StatusType(models.TextChoices):
-    seen = 'Просмотрено'
-    not_seen = 'Не просмотрено'
+    SEEN = 'Просмотрено'
+    NOT_SEEN = 'Не просмотрено'
 
 

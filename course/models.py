@@ -49,9 +49,9 @@ class LessonStatus(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.lesson.duration * 0.8 >= self.watched_time:
-            self.status = StatusType.seen
+            self.status = StatusType.SEEN
         else:
-            self.status = StatusType.not_seen
+            self.status = StatusType.NOT_SEEN
         super().save(*args, **kwargs)
 
 

@@ -43,16 +43,16 @@ class CourseStatsAPIView(generics.ListAPIView):
         queryset = models.Course.objects.all()
 
         for course in queryset:
-            watched_lessons_count = models.Access.objects.filter(lesson__courses=course, is_completed=True).count()
+            watched_lessons_count = models.Access.objects.filter(course_access=course, is_completed=True).count()
 
-            total_watched_time = models.Access.objects.filter(lesson__courses=course, is_completed=True).aggregate(
+            total_watched_time = models.Access.objects.filter(course_access=course, is_completed=True).aggregate(
                 total_time=models.Sum('watched_time_seconds')
             )
 
             enrolled_students_count = models.Access.objects.filter(course=course).count()
 
             total_users_count = models.User.objects.count()
-            course_access_count = models.Access.objects.filter(course=course).count()
+            course_access_count = models.Access.objects.filter(course_access=course).count()
             purchase_percentage = (course_access_count / total_users_count) * 100 if total_users_count != 0 else 0
 
             course.watched_lessons_count = watched_lessons_count
