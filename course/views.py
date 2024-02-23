@@ -12,19 +12,23 @@ class LessonAPIView(generics.ListAPIView):
         user = self.request.user
         course = models.Course.objects.filter(course_access__user=user)
         lessons_access = models.Lesson.objects.filter(course__in=course)
-        return models.LessonStatus.objects.filter(user=user, lesson__in=lessons_access)
+        return models.LessonStatus.objects.filter(
+            user=user, lesson__in=lessons_access
+        ).select_related('lesson')
     
 class LessonDetailAPIView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = LessonStatusSerializer
-    queryset = models.LessonStatus.objects.all()
+    queryset = models.LessonStatus.objects.select_related(
+        'lesson'
+    ).all()
 
     def get_object(self):
         user = self.request.user
         course_id = self.kwargs.get('course_id')
         lesson_id = self.kwargs.get('lesson_id')
 
-        course = models.Course.objects.filter(pk=course_id, access__user=user).first()
+        course = models.Course.objects.filter(pk=course_id, course_access__user=user).first()
         if course:
             lesson = models.Lesson.objects.filter(pk=lesson_id, products=course).first()
             return lesson
